@@ -17,6 +17,8 @@ public class ejercicio2 {
 			System.out.println("El numero introducido es menor que 0");
 		}
 		
+		//comentario 8 enero
+		
 		
 		
 		
