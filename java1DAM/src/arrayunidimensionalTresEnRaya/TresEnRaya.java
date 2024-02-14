@@ -1,39 +1,37 @@
-package tresenraya;
+package arrayunidimensionalTresEnRaya;
 
 import java.util.Scanner;
 
 public class TresEnRaya {
-    private String[][] tablero;
-    String jugador1;
-    String jugador2;
+    private String[] tablero;
+    private String jugador1;
+    private String jugador2;
 
     public TresEnRaya(String jugador1, String jugador2) {
         this.jugador1 = jugador1;
         this.jugador2 = jugador2;
-        tablero = new String[3][3];
+        tablero = new String[9];
         inicializarTablero();
     }
 
     public void inicializarTablero() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                tablero[i][j] = "_";
-            }
+        for (int i = 0; i < 9; i++) {
+            tablero[i] = "_";
         }
     }
 
     public void imprimirTablero() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(tablero[i][j] + " ");
+        for (int i = 0; i < 9; i++) {
+            System.out.print(tablero[i] + " ");
+            if ((i + 1) % 3 == 0) {
+                System.out.println();
             }
-            System.out.println();
         }
     }
 
-    public boolean realizarJugada(int fila, int columna, String ficha) {
-        if (fila >= 0 && fila < 3 && columna >= 0 && columna < 3 && tablero[fila][columna].equals("_")) {
-            tablero[fila][columna] = ficha;
+    public boolean realizarJugada(int posicion, String ficha) {
+        if (posicion >= 1 && posicion <= 9 && tablero[posicion - 1].equals("_")) {
+            tablero[posicion - 1] = ficha;
             return true;
         } else {
             return false;
@@ -41,27 +39,30 @@ public class TresEnRaya {
     }
 
     public boolean verificarGanador(String ficha) {
-        // Verificar filas y columnas
+        // Verificar filas
+        for (int i = 0; i < 9; i += 3) {
+            if (tablero[i].equals(ficha) && tablero[i + 1].equals(ficha) && tablero[i + 2].equals(ficha)) {
+                return true;
+            }
+        }
+        // Verificar columnas
         for (int i = 0; i < 3; i++) {
-            if ((tablero[i][0].equals(ficha) && tablero[i][1].equals(ficha) && tablero[i][2].equals(ficha)) ||
-                (tablero[0][i].equals(ficha) && tablero[1][i].equals(ficha) && tablero[2][i].equals(ficha))) {
+            if (tablero[i].equals(ficha) && tablero[i + 3].equals(ficha) && tablero[i + 6].equals(ficha)) {
                 return true;
             }
         }
         // Verificar diagonales
-        if ((tablero[0][0].equals(ficha) && tablero[1][1].equals(ficha) && tablero[2][2].equals(ficha)) ||
-            (tablero[0][2].equals(ficha) && tablero[1][1].equals(ficha) && tablero[2][0].equals(ficha))) {
+        if ((tablero[0].equals(ficha) && tablero[4].equals(ficha) && tablero[8].equals(ficha)) ||
+            (tablero[2].equals(ficha) && tablero[4].equals(ficha) && tablero[6].equals(ficha))) {
             return true;
         }
         return false;
     }
 
     public boolean tableroLleno() {
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (tablero[i][j].equals("_")) {
-                    return false;
-                }
+        for (int i = 0; i < 9; i++) {
+            if (tablero[i].equals("_")) {
+                return false;
             }
         }
         return true;
@@ -82,12 +83,10 @@ public class TresEnRaya {
             System.out.println("Turno de " + (fichaActual.equals("X") ? juego.jugador1 : juego.jugador2));
             juego.imprimirTablero();
 
-            System.out.println("Ingrese la fila (0-2):");
-            int fila = scanner.nextInt();
-            System.out.println("Ingrese la columna (0-2):");
-            int columna = scanner.nextInt();
+            System.out.println("Ingrese la posición (1-9):");
+            int posicion = scanner.nextInt();
 
-            if (juego.realizarJugada(fila, columna, fichaActual)) {
+            if (juego.realizarJugada(posicion, fichaActual)) {
                 if (juego.verificarGanador(fichaActual)) {
                     System.out.println("¡" + (fichaActual.equals("X") ? juego.jugador1 : juego.jugador2) + " ha ganado!");
                     break;
@@ -98,7 +97,7 @@ public class TresEnRaya {
                     fichaActual = (fichaActual.equals("X")) ? "O" : "X";
                 }
             } else {
-                System.out.println("Movimiento inválido. Intente de nuevo.");
+                System.out.println("Posición inválida. Intente de nuevo.");
             }
         }
 
